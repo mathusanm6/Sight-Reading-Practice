@@ -1,14 +1,14 @@
+import { SHORTCUT_LETTERS } from "@/domain/keyboard";
+import type { Language } from "@/domain/settings";
 import { useMessages } from "@/i18n/MessagesProvider";
 import styles from "./Footer.module.css";
 
-const SHORTCUT_LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
-
-export function Footer({ onReset }: { onReset: () => void }) {
+export function Footer({ language, onReset }: { language: Language; onReset: () => void }) {
   const m = useMessages();
   return (
     <div className={styles.foot}>
       <p className={styles.hint}>
-        {m.keyboardBefore} {SHORTCUT_LETTERS.map((l) => <kbd key={l} className={styles.kbd}>{l}</kbd>)} {m.keyboardAfter}
+        {m.keyboardBefore} {SHORTCUT_LETTERS[language].map((l) => <kbd key={l} className={styles.kbd}>{l}</kbd>)} {m.keyboardAfter}
       </p>
       <button
         className={styles.link}

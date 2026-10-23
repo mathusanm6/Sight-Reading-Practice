@@ -1,13 +1,15 @@
 import { useEffect, useRef } from "react";
 import { answerIndexForKey } from "@/domain/keyboard";
+import type { Language } from "@/domain/settings";
 
 interface Handlers {
+  language: Language;
   onAnswer: (index: number) => void;
   /** Returns true if the key press was used. */
   onAdvance: () => boolean;
 }
 
-/** Note-name keys (C–G, A, B or 1–7) answer; Enter/Space starts or skips ahead. */
+/** Note-name keys (language-specific letters, or 1–7) answer; Enter/Space starts or skips ahead. */
 export function useKeyboardShortcuts(handlers: Handlers) {
   const ref = useRef(handlers);
   useEffect(() => {
@@ -17,7 +19,7 @@ export function useKeyboardShortcuts(handlers: Handlers) {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
-      const index = answerIndexForKey(e);
+      const index = answerIndexForKey(e, ref.current.language);
       if (index !== null) {
         e.preventDefault();
         ref.current.onAnswer(index);

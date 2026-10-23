@@ -22,7 +22,7 @@ export function PracticeApp() {
     document.documentElement.lang = language;
   }, [language]);
 
-  useKeyboardShortcuts({ onAnswer: session.answer, onAdvance: session.advance });
+  useKeyboardShortcuts({ language, onAnswer: session.answer, onAdvance: session.advance });
 
   return (
     <MessagesProvider language={language}>
@@ -38,7 +38,7 @@ export function PracticeApp() {
             <Header settingsOpen={sidebar.open} onToggleSettings={sidebar.toggle} />
             <Board state={state} msLeft={session.msLeft} onStart={session.start} />
             <PianoKeys answer={state.answer} disabled={state.phase !== "playing"} onAnswer={session.answer} />
-            <Footer onReset={session.restart} />
+            <Footer language={language} onReset={session.restart} />
           </div>
         </main>
       </div>
