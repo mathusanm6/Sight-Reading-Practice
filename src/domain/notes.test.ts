@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { isMiddleC, noteNameIndex, pickNote, stepRange } from "./notes";
-import { NOTE_NAMES } from "./solfege";
+import { messages } from "@/i18n/messages";
+
+const NOTE_NAMES = messages.fr.noteNames;
 
 describe("noteNameIndex", () => {
   it("names the treble clef lines and spaces", () => {

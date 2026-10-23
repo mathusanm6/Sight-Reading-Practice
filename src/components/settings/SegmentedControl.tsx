@@ -1,6 +1,10 @@
 import { useId } from "react";
-import type { Option } from "@/domain/settings";
 import styles from "./SegmentedControl.module.css";
+
+export interface Option<T> {
+  value: T;
+  label: string;
+}
 
 interface Props<T extends string | number> {
   label: string;

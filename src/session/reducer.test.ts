@@ -47,6 +47,13 @@ describe("sessionReducer", () => {
     expect(sessionReducer(done, { type: "answer", index: 2, now: 9000 })).toBe(done);
   });
 
+  it("switches language without touching the session", () => {
+    const before = run([free(), { type: "answer", index: 2, now: 1100 }]);
+    const after = sessionReducer(before, { type: "language", language: "en" });
+    expect(after.settings.language).toBe("en");
+    expect({ ...after, settings: before.settings }).toEqual(before);
+  });
+
   it("clears stats when a new timed session starts", () => {
     let s: SessionState = run([timed(), { type: "start", note: MI, now: 0 }, { type: "answer", index: 2, now: 100 }]);
     s = sessionReducer(s, { type: "finish", record: { previous: 0, isRecord: true } });

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { NOTE_NAMES } from "@/domain/solfege";
+import { useMessages } from "@/i18n/MessagesProvider";
 import { cx } from "@/lib/cx";
 import type { AnswerResult } from "@/session/reducer";
 import styles from "./PianoKeys.module.css";
@@ -14,9 +14,10 @@ interface Props {
 }
 
 export function PianoKeys({ answer, disabled, onAnswer }: Props) {
+  const m = useMessages();
   return (
-    <section className={cx(styles.keys, disabled && styles.off)} aria-label="Nom de la note">
-      {NOTE_NAMES.map((name, i) => (
+    <section className={cx(styles.keys, disabled && styles.off)} aria-label={m.noteNameKeys}>
+      {m.noteNames.map((name, i) => (
         <button
           key={name}
           type="button"

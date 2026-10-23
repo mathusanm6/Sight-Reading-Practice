@@ -54,7 +54,10 @@ export function useSession() {
     msLeft,
     changeSettings: (next: Settings) => {
       saveSettings(next);
-      reset(next);
+      const onlyLanguageChanged =
+        next.clefMode === settings.clefMode && next.ledger === settings.ledger && next.mode === settings.mode;
+      if (onlyLanguageChanged) dispatch({ type: "language", language: next.language });
+      else reset(next);
     },
     restart: () => reset(settings),
     answer: (index: number) => dispatch({ type: "answer", index, now: performance.now() }),

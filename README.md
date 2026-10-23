@@ -1,4 +1,4 @@
-# Portée Flash
+# Portée
 
 Solfège sight-reading trainer (Next.js, React, TypeScript).
 
@@ -14,6 +14,7 @@ npm run lint && npm run typecheck && npm run build
 | --- | --- |
 | `src/domain/` | Pure logic, no React or DOM: notes, clefs, staff geometry, settings, timing, key mapping. Unit-tested. |
 | `src/session/` | The practice session: a pure reducer (`reducer.ts`), `useSession` (timers + persistence), `useCountdown`. |
+| `src/i18n/` | All UI text (`messages.ts`, French and English, including note names) and the `useMessages` hook. |
 | `src/lib/` | Browser glue: guarded `localStorage` access, class-name helper. |
 | `src/hooks/` | Reusable hooks (keyboard shortcuts). |
 | `src/components/` | Presentational React components, each with a co-located CSS module. |

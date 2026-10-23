@@ -1,3 +1,4 @@
+import { useMessages } from "@/i18n/MessagesProvider";
 import type { SessionState } from "@/session/reducer";
 import styles from "./Board.module.css";
 import { Feedback } from "./Feedback";
@@ -14,10 +15,11 @@ interface Props {
 
 /** The "score sheet" card: stats, optional countdown, staff, and answer feedback. */
 export function Board({ state, msLeft, onStart }: Props) {
+  const m = useMessages();
   const { phase, settings, answer } = state;
   const timed = settings.mode === "timed";
   return (
-    <section className={styles.board} aria-label="Exercice">
+    <section className={styles.board} aria-label={m.exercise}>
       <Hud state={state} msLeft={msLeft} />
       {timed && <TimerBar phase={phase} msLeft={msLeft} />}
       <div className={styles.stage}>

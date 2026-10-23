@@ -2,6 +2,7 @@ import { CLEFS } from "@/domain/clefs";
 import type { Note } from "@/domain/notes";
 import type { ClefMode, LedgerLimit } from "@/domain/settings";
 import { noteGeometry, staffGeometry, UNIT } from "@/domain/staffLayout";
+import { useMessages } from "@/i18n/MessagesProvider";
 import { cx } from "@/lib/cx";
 import styles from "./Staff.module.css";
 
@@ -17,12 +18,13 @@ interface Props {
 const STAFF_LINE_STEPS = [0, 2, 4, 6, 8];
 
 export function Staff({ note, noteKey, clefMode, ledger, result }: Props) {
+  const m = useMessages();
   const geo = staffGeometry(clefMode, ledger);
   const { y } = geo;
   const n = note && noteGeometry(note, geo);
 
   return (
-    <svg className={styles.staff} viewBox={`0 0 ${geo.width} ${geo.height}`} role="img" aria-label="Portée avec une note à nommer">
+    <svg className={styles.staff} viewBox={`0 0 ${geo.width} ${geo.height}`} role="img" aria-label={m.staffLabel}>
       {geo.staves.map(({ clef, bottom }) => (
         <g key={clef}>
           {STAFF_LINE_STEPS.map((step) => (

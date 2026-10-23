@@ -1,3 +1,4 @@
+/* The empty third column keeps the title centred. */
 .header { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; }
 .titles { text-align: center; min-width: 0; }
 .title { margin: 0; font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
@@ -5,4 +6,3 @@
 .toggle { appearance: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: var(--bw) solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); cursor: pointer; touch-action: manipulation; }
 .toggle:hover { background: var(--soft); }
 .toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.badge { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--on-accent); }

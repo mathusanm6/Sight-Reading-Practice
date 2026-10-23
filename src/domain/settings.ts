@@ -1,46 +1,33 @@
-export type ClefMode = "both" | "sol" | "fa";
-export type LedgerLimit = 0 | 2 | 4;
-export type PracticeMode = "free" | "timed";
+export const CLEF_MODES = ["both", "sol", "fa"] as const;
+export const LEDGER_LIMITS = [0, 2, 4] as const;
+export const PRACTICE_MODES = ["free", "timed"] as const;
+export const LANGUAGES = ["fr", "en"] as const;
+
+export type ClefMode = (typeof CLEF_MODES)[number];
+export type LedgerLimit = (typeof LEDGER_LIMITS)[number];
+export type PracticeMode = (typeof PRACTICE_MODES)[number];
+/** Drives both the interface text and the note names (Do Ré Mi… or C D E…). */
+export type Language = (typeof LANGUAGES)[number];
 
 export interface Settings {
   clefMode: ClefMode;
   ledger: LedgerLimit;
   mode: PracticeMode;
+  language: Language;
 }
 
-export const DEFAULT_SETTINGS: Settings = { clefMode: "both", ledger: 2, mode: "free" };
+export const DEFAULT_SETTINGS: Settings = { clefMode: "both", ledger: 2, mode: "free", language: "fr" };
 
-export interface Option<T> {
-  value: T;
-  label: string;
-}
-
-export const CLEF_OPTIONS: Option<ClefMode>[] = [
-  { value: "both", label: "Sol + Fa" },
-  { value: "sol", label: "Sol" },
-  { value: "fa", label: "Fa" },
-];
-
-export const LEDGER_OPTIONS: Option<LedgerLimit>[] = [
-  { value: 0, label: "Aucune" },
-  { value: 2, label: "Jusqu’à 2" },
-  { value: 4, label: "Jusqu’à 4" },
-];
-
-export const MODE_OPTIONS: Option<PracticeMode>[] = [
-  { value: "free", label: "Libre" },
-  { value: "timed", label: "Chrono 60 s" },
-];
-
-const isOneOf = <T>(options: Option<T>[], value: unknown): value is T =>
-  options.some((o) => o.value === value);
+const oneOf = <T>(values: readonly T[], value: unknown, fallback: T): T =>
+  values.includes(value as T) ? (value as T) : fallback;
 
 /** Validates untrusted (e.g. persisted) data, falling back to defaults field by field. */
 export function parseSettings(raw: unknown): Settings {
   const p = (typeof raw === "object" && raw !== null ? raw : {}) as Record<string, unknown>;
   return {
-    clefMode: isOneOf(CLEF_OPTIONS, p.clefMode) ? p.clefMode : DEFAULT_SETTINGS.clefMode,
-    ledger: isOneOf(LEDGER_OPTIONS, p.ledger) ? p.ledger : DEFAULT_SETTINGS.ledger,
-    mode: isOneOf(MODE_OPTIONS, p.mode) ? p.mode : DEFAULT_SETTINGS.mode,
+    clefMode: oneOf(CLEF_MODES, p.clefMode, DEFAULT_SETTINGS.clefMode),
+    ledger: oneOf(LEDGER_LIMITS, p.ledger, DEFAULT_SETTINGS.ledger),
+    mode: oneOf(PRACTICE_MODES, p.mode, DEFAULT_SETTINGS.mode),
+    language: oneOf(LANGUAGES, p.language, DEFAULT_SETTINGS.language),
   };
 }

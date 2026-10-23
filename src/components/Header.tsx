@@ -1,5 +1,5 @@
+import { useMessages } from "@/i18n/MessagesProvider";
 import styles from "./Header.module.css";
-import { Sparkle } from "./Sparkle";
 import { SIDEBAR_ID } from "./settings/SettingsSidebar";
 
 interface Props {
@@ -8,13 +8,14 @@ interface Props {
 }
 
 export function Header({ settingsOpen, onToggleSettings }: Props) {
+  const m = useMessages();
   return (
     <header className={styles.header}>
       <button
         className={styles.toggle}
         type="button"
-        aria-label="Réglages"
-        title="Réglages"
+        aria-label={m.settings}
+        title={m.settings}
         aria-controls={SIDEBAR_ID}
         aria-expanded={settingsOpen ?? undefined}
         onClick={onToggleSettings}
@@ -24,10 +25,9 @@ export function Header({ settingsOpen, onToggleSettings }: Props) {
         </svg>
       </button>
       <div className={styles.titles}>
-        <h1 className={styles.title}>Portée Flash</h1>
-        <p className={styles.sub}>Solfège · lecture de notes</p>
+        <h1 className={styles.title}>{m.appTitle}</h1>
+        <p className={styles.sub}>{m.appSubtitle}</p>
       </div>
-      <span className={styles.badge} aria-hidden="true"><Sparkle size={20} /></span>
     </header>
   );
 }

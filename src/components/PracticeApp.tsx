@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useSidebar } from "@/hooks/useSidebar";
+import { MessagesProvider } from "@/i18n/MessagesProvider";
 import { useSession } from "@/session/useSession";
 import styles from "./PracticeApp.module.css";
 import { Board } from "./board/Board";
@@ -14,25 +16,32 @@ export function PracticeApp() {
   const session = useSession();
   const sidebar = useSidebar();
   const { state } = session;
+  const { language } = state.settings;
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   useKeyboardShortcuts({ onAnswer: session.answer, onAdvance: session.advance });
 
   return (
-    <div className={styles.shell}>
-      <SettingsSidebar
-        open={sidebar.open}
-        settings={state.settings}
-        onChange={session.changeSettings}
-        onClose={() => sidebar.setOpen(false)}
-      />
-      <main className={styles.main}>
-        <div className={styles.app}>
-          <Header settingsOpen={sidebar.open} onToggleSettings={sidebar.toggle} />
-          <Board state={state} msLeft={session.msLeft} onStart={session.start} />
-          <PianoKeys answer={state.answer} disabled={state.phase !== "playing"} onAnswer={session.answer} />
-          <Footer onReset={session.restart} />
-        </div>
-      </main>
-    </div>
+    <MessagesProvider language={language}>
+      <div className={styles.shell}>
+        <SettingsSidebar
+          open={sidebar.open}
+          settings={state.settings}
+          onChange={session.changeSettings}
+          onClose={() => sidebar.setOpen(false)}
+        />
+        <main className={styles.main}>
+          <div className={styles.app}>
+            <Header settingsOpen={sidebar.open} onToggleSettings={sidebar.toggle} />
+            <Board state={state} msLeft={session.msLeft} onStart={session.start} />
+            <PianoKeys answer={state.answer} disabled={state.phase !== "playing"} onAnswer={session.answer} />
+            <Footer onReset={session.restart} />
+          </div>
+        </main>
+      </div>
+    </MessagesProvider>
   );
 }

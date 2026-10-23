@@ -9,11 +9,6 @@ export function nextNoteDelay(isRight: boolean, mode: PracticeMode): number {
   return mode === "timed" ? 800 : 1300;
 }
 
-/** "1,3 s" — French decimal comma. */
-export function formatSeconds(ms: number): string {
-  return (ms / 1000).toFixed(1).replace(".", ",") + " s";
-}
-
 export function average(values: readonly number[]): number | null {
   return values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
 }

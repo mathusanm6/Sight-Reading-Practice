@@ -7,7 +7,7 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "Portée Flash",
+  title: "Portée",
   description: "Entraînement à la lecture de notes en solfège.",
 };
 

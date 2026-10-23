@@ -1,38 +1,41 @@
 import { useEffect, useRef } from "react";
-import { average, formatSeconds } from "@/domain/timing";
+import { average } from "@/domain/timing";
+import { useMessages } from "@/i18n/MessagesProvider";
 import { cx } from "@/lib/cx";
 import type { SessionState } from "@/session/reducer";
 import { Sparkle } from "../Sparkle";
 import styles from "./StageOverlay.module.css";
 
 function IdleContent({ onStart }: { onStart: () => void }) {
+  const m = useMessages();
   return (
     <>
-      <p className={styles.kicker}>Mode chrono</p>
-      <p className={styles.title}>60 secondes.<br />Nomme un maximum de notes.</p>
-      <button className={styles.primary} type="button" onClick={onStart}><Sparkle size={16} />Démarrer<Sparkle size={16} /></button>
+      <p className={styles.kicker}>{m.timedMode}</p>
+      <p className={styles.title}>{m.timedIntro[0]}<br />{m.timedIntro[1]}</p>
+      <button className={styles.primary} type="button" onClick={onStart}><Sparkle size={16} />{m.start}<Sparkle size={16} /></button>
     </>
   );
 }
 
 function ResultContent({ state, onStart }: { state: SessionState; onStart: () => void }) {
+  const m = useMessages();
   const button = useRef<HTMLButtonElement>(null);
   useEffect(() => button.current?.focus({ preventScroll: true }), []);
 
   const { correct, total, times, record } = state;
-  const pct = total ? `${Math.round((100 * correct) / total)} %` : "–";
+  const pct = total ? m.formatPercent(Math.round((100 * correct) / total)) : "–";
   const avg = average(times);
 
   return (
     <>
-      <p className={styles.kicker}>Temps écoulé</p>
-      <p className={styles.big}><b>{correct}</b><span>notes justes</span></p>
-      <p className={styles.sub}>sur {total} · {pct}{avg === null ? "" : ` · ${formatSeconds(avg)} par note`}</p>
-      {record?.isRecord && <p className={cx(styles.record, styles.new)}>Nouveau record</p>}
+      <p className={styles.kicker}>{m.timeUp}</p>
+      <p className={styles.big}><b>{correct}</b><span>{m.correctNotes}</span></p>
+      <p className={styles.sub}>{m.summary(total, pct, avg === null ? null : m.formatSeconds(avg))}</p>
+      {record?.isRecord && <p className={cx(styles.record, styles.new)}>{m.newRecord}</p>}
       {!record?.isRecord && !!record?.previous && (
-        <p className={styles.record}>Record : {record.previous} pour ces réglages</p>
+        <p className={styles.record}>{m.record(record.previous)}</p>
       )}
-      <button ref={button} className={styles.primary} type="button" onClick={onStart}><Sparkle size={16} />Rejouer<Sparkle size={16} /></button>
+      <button ref={button} className={styles.primary} type="button" onClick={onStart}><Sparkle size={16} />{m.playAgain}<Sparkle size={16} /></button>
     </>
   );
 }

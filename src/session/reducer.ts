@@ -1,9 +1,9 @@
 import { SESSION_MS } from "@/domain/timing";
 import { noteNameIndex, type Note } from "@/domain/notes";
-import { DEFAULT_SETTINGS, type Settings } from "@/domain/settings";
+import { DEFAULT_SETTINGS, type Language, type Settings } from "@/domain/settings";
 
 /**
- * idle: timed mode waiting for "Démarrer"; playing: a note is on screen (or
+ * idle: timed mode waiting for the start button; playing: a note is on screen (or
  * being replaced); finished: timed session over, result overlay showing.
  */
 export type Phase = "idle" | "playing" | "finished";
@@ -49,6 +49,7 @@ export type SessionAction =
   | { type: "start"; note: Note; now: number }
   | { type: "show"; note: Note; now: number }
   | { type: "answer"; index: number; now: number }
+  | { type: "language"; language: Language }
   | { type: "finish"; record: RecordInfo };
 
 const emptyStats = {
@@ -106,6 +107,10 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
         lastTime: isRight ? reactionTime : state.lastTime,
       };
     }
+
+    // Language only changes what is shown, so the running session is kept.
+    case "language":
+      return { ...state, settings: { ...state.settings, language: action.language } };
 
     case "finish":
       if (state.phase !== "playing") return state;
