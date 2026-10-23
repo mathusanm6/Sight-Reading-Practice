@@ -1,6 +1,7 @@
 import { useMessages } from "@/i18n/MessagesProvider";
 import styles from "./Header.module.css";
 import { SIDEBAR_ID } from "./settings/SettingsSidebar";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface Props {
   settingsOpen: boolean | null;
@@ -28,6 +29,7 @@ export function Header({ settingsOpen, onToggleSettings }: Props) {
         <h1 className={styles.title}>{m.appTitle}</h1>
         <p className={styles.sub}>{m.appSubtitle}</p>
       </div>
+      <ThemeToggle />
     </header>
   );
 }

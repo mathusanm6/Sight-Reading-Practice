@@ -11,6 +11,8 @@ export interface Messages {
   formatPercent: (percent: number) => string;
 
   settings: string;
+  switchToDark: string;
+  switchToLight: string;
   hideSettings: string;
   closeSettings: string;
   settingLabels: { clef: string; ledger: string; mode: string; language: string };
@@ -54,6 +56,8 @@ const fr: Messages = {
   formatPercent: (p) => `${p} %`,
 
   settings: "Réglages",
+  switchToDark: "Passer en mode sombre",
+  switchToLight: "Passer en mode clair",
   hideSettings: "Masquer",
   closeSettings: "Fermer les réglages",
   settingLabels: { clef: "Clé", ledger: "Lignes suppl.", mode: "Mode", language: "Langue" },
@@ -95,6 +99,8 @@ const en: Messages = {
   formatPercent: (p) => `${p}%`,
 
   settings: "Settings",
+  switchToDark: "Switch to dark mode",
+  switchToLight: "Switch to light mode",
   hideSettings: "Hide",
   closeSettings: "Close settings",
   settingLabels: { clef: "Clef", ledger: "Ledger lines", mode: "Mode", language: "Language" },

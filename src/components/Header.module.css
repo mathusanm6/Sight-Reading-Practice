@@ -1,4 +1,4 @@
-/* The empty third column keeps the title centred. */
+/* The third column holds the theme toggle and keeps the title centred. */
 .header { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; }
 .titles { text-align: center; min-width: 0; }
 .title { margin: 0; font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }

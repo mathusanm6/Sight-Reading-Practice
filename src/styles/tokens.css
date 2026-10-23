@@ -13,12 +13,24 @@
   --label: var(--display); /* small uppercase labels share the display face */
 }
 
+/* An explicit data-theme (set by the toggle) wins; with none, the system setting decides. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg: #0b0b0b; --surface: #0b0b0b; --ink: #f5f5f5; --muted: #a3a3a3;
     --line: #f5f5f5; --soft: #232323; --staff: #f5f5f5;
     --accent: #f5f5f5; --on-accent: #0b0b0b;
     --good: #3ddc84; --bad: #ff6b60; --on-state: #0b0b0b;
     --key: #f5f5f5; --key-ink: #0b0b0b; --key-edge: #f5f5f5; --black-key: #0b0b0b;
   }
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0b0b; --surface: #0b0b0b; --ink: #f5f5f5; --muted: #a3a3a3;
+  --line: #f5f5f5; --soft: #232323; --staff: #f5f5f5;
+  --accent: #f5f5f5; --on-accent: #0b0b0b;
+  --good: #3ddc84; --bad: #ff6b60; --on-state: #0b0b0b;
+  --key: #f5f5f5; --key-ink: #0b0b0b; --key-edge: #f5f5f5; --black-key: #0b0b0b;
 }
