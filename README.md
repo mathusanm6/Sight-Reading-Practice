@@ -8,6 +8,12 @@ npm test           # unit tests (vitest)
 npm run lint && npm run typecheck && npm run build
 ```
 
+## Deploy (GitHub Pages)
+
+`.github/workflows/deploy.yml` lints, type-checks, tests, builds a static export (`output: "export"` → `out/`) and publishes it on every push to `main`.
+One-time setup: repo **Settings → Pages → Source: GitHub Actions**. The site is served at `https://<user>.github.io/<repo>/`; the workflow sets `BASE_PATH` from the repo name, so nothing to configure.
+To preview the production build locally: `npm run build && npx serve out`.
+
 ## Layout
 
 | Path | Role |
