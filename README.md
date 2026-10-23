@@ -4,6 +4,8 @@ A sight-reading trainer: a note appears on the staff, you name it. French (Do R√
 
 **Live:** https://mathusanm6.github.io/Sight-Reading-Practice/
 
+![Port√©e screenshot](docs/screenshot.png)
+
 ## Features
 
 - **Clefs:** treble, bass, or both at once on a grand staff. The gap between the staves grows with the ledger-line limit, so notes can pass middle C on either staff.
