@@ -1,5 +1,5 @@
-.hud { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--soft); }
-.stat { display: grid; gap: 4px; min-width: 0; }
-.k { font: 500 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.v { font-size: 26px; line-height: 1; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.hud { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.stat { display: grid; gap: 6px; min-width: 0; }
+.k { font: 800 10.5px/1 var(--label); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.v { font-size: 30px; line-height: 1; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .v small { font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 0; }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { average, formatSeconds } from "@/domain/timing";
 import { cx } from "@/lib/cx";
 import type { SessionState } from "@/session/reducer";
+import { Sparkle } from "../Sparkle";
 import styles from "./StageOverlay.module.css";
 
 function IdleContent({ onStart }: { onStart: () => void }) {
@@ -9,7 +10,7 @@ function IdleContent({ onStart }: { onStart: () => void }) {
     <>
       <p className={styles.kicker}>Mode chrono</p>
       <p className={styles.title}>60 secondes.<br />Nomme un maximum de notes.</p>
-      <button className={styles.primary} type="button" onClick={onStart}>Démarrer</button>
+      <button className={styles.primary} type="button" onClick={onStart}><Sparkle size={16} />Démarrer<Sparkle size={16} /></button>
     </>
   );
 }
@@ -31,7 +32,7 @@ function ResultContent({ state, onStart }: { state: SessionState; onStart: () =>
       {!record?.isRecord && !!record?.previous && (
         <p className={styles.record}>Record : {record.previous} pour ces réglages</p>
       )}
-      <button ref={button} className={styles.primary} type="button" onClick={onStart}>Rejouer</button>
+      <button ref={button} className={styles.primary} type="button" onClick={onStart}><Sparkle size={16} />Rejouer<Sparkle size={16} /></button>
     </>
   );
 }

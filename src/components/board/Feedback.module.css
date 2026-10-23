@@ -1,6 +1,6 @@
-.feedback { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 34px; padding-top: 6px; }
-.msg { font-size: 17px; font-weight: 700; }
+.feedback { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 36px; padding-top: 8px; }
+.msg { font-size: 17px; font-weight: 800; }
 .muted { font-weight: 500; color: var(--muted); }
 .ok { color: var(--good); }
 .bad { color: var(--bad); }
-.last { font: 500 12px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.last { font: 700 12px/1 var(--label); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }

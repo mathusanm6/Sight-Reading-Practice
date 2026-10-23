@@ -1,7 +1,7 @@
 /* Units are SVG viewBox units (1 staff space = 16). */
 /* Fills the stage and scales to fit, so the exercise never needs scrolling. */
 .staff { position: absolute; inset: 0; margin: auto; width: 100%; height: 100%; max-width: 520px; }
-.line { stroke: var(--staff); stroke-width: 1.9; fill: none; }
+.line { stroke: var(--staff); stroke-width: 2; fill: none; }
 .thick { fill: var(--staff); }
 .clef path { fill: var(--ink); }
 .ledger { stroke: var(--staff); stroke-width: 2.7; }

@@ -1,23 +1,24 @@
-/* Design tokens. Components read these; nothing else defines colours. */
+/* Design tokens. Components read these; nothing else defines colours.
+   Language: monochrome ink on paper, thick outlines, pill shapes. Only right/wrong feedback uses colour. */
 :root {
   color-scheme: light dark;
-  --bg: #ecf0f5; --surface: #fafbfd; --ink: #101a28; --muted: #586679;
-  --line: #c8d1dd; --soft: #e1e7ef; --staff: #44546a;
-  --accent: #3347d3; --on-accent: #ffffff;
-  --good: #1a8754; --bad: #c7352b; --on-state: #ffffff;
-  --key: #fbfbfc; --key-ink: #101a28; --key-edge: #b4bfcd; --black-key: #0e1621;
-  --shadow: 0 1px 0 rgba(16,26,40,.04), 0 10px 28px -14px rgba(16,26,40,.22);
+  --bg: #ffffff; --surface: #ffffff; --ink: #000000; --muted: #5c5c5c;
+  --line: #000000; --soft: #ececec; --staff: #000000;
+  --accent: #000000; --on-accent: #ffffff;
+  --good: #0a9f4f; --bad: #e5322a; --on-state: #ffffff;
+  --key: #ffffff; --key-ink: #000000; --key-edge: #000000; --black-key: #000000;
+  --bw: 2px;               /* the outline weight used everywhere */
+  --radius-card: 28px;
   --display: var(--font-bricolage), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --label: var(--display); /* small uppercase labels share the display face */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c121a; --surface: #141c27; --ink: #e8edf4; --muted: #93a1b3;
-    --line: #2a3646; --soft: #1d2836; --staff: #8b9bb0;
-    --accent: #93a4ff; --on-accent: #0c121a;
-    --good: #4cc38a; --bad: #ff7b70; --on-state: #0c121a;
-    --key: #e4e9f0; --key-ink: #101a28; --key-edge: #8996a8; --black-key: #05080d;
-    --shadow: 0 10px 28px -14px rgba(0,0,0,.7);
+    --bg: #0b0b0b; --surface: #0b0b0b; --ink: #f5f5f5; --muted: #a3a3a3;
+    --line: #f5f5f5; --soft: #232323; --staff: #f5f5f5;
+    --accent: #f5f5f5; --on-accent: #0b0b0b;
+    --good: #3ddc84; --bad: #ff6b60; --on-state: #0b0b0b;
+    --key: #f5f5f5; --key-ink: #0b0b0b; --key-edge: #f5f5f5; --black-key: #0b0b0b;
   }
 }

@@ -1,11 +1,10 @@
-.opt { display: grid; gap: 6px; }
-.lab { font: 500 11px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; min-width: 0; background: var(--soft); border-radius: 11px; }
+.opt { display: grid; gap: 8px; }
+.lab { font: 800 11px/1.2 var(--label); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; min-width: 0; border: var(--bw) solid var(--line); border-radius: 999px; }
 .seg label { position: relative; min-width: 0; }
 .seg input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.seg span { display: grid; place-items: center; min-height: 38px; padding: 0 6px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--muted); transition: background .12s, color .12s; }
-.seg input:not(:checked):hover + span { color: var(--ink); }
-.seg input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 700; }
-.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-
+.seg span { display: grid; place-items: center; min-height: 36px; padding: 0 6px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--ink); transition: background .12s, color .12s; }
+.seg input:not(:checked):hover + span { background: var(--soft); }
+.seg input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 800; }
+.seg input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .seg span { transition: none; } }
