@@ -1,0 +1,25 @@
+.sidebar {
+  flex: none; width: 272px; overflow-y: auto; padding: 20px 16px;
+  background: var(--surface); border-right: 1px solid var(--line);
+}
+.head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+.title { margin: 0; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.close { appearance: none; border: 0; background: none; padding: 4px 2px; font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.close:hover { color: var(--ink); }
+.close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.backdrop { display: none; }
+
+/* Wide: a column beside the exercise, open unless the user hid it. */
+.sidebar[data-open="false"] { display: none; }
+
+/* Narrow: a drawer over the exercise, closed unless the user opened it. */
+@media (max-width: 899px) {
+  .sidebar {
+    position: fixed; inset-block: 0; left: 0; z-index: 20; max-width: 85vw;
+    padding-top: max(20px, env(safe-area-inset-top, 0px));
+    box-shadow: var(--shadow); transition: transform .18s ease-out;
+  }
+  .sidebar:not([data-open="true"]) { display: block; transform: translateX(-105%); visibility: hidden; transition: transform .18s ease-out, visibility 0s .18s; }
+  .backdrop[data-open="true"] { display: block; position: fixed; inset: 0; z-index: 10; border: 0; padding: 0; background: rgba(8, 12, 18, .45); }
+}
+@media (prefers-reduced-motion: reduce) { .sidebar, .sidebar:not([data-open="true"]) { transition: none; } }

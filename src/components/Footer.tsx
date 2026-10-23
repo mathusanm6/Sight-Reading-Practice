@@ -1,0 +1,23 @@
+import styles from "./Footer.module.css";
+
+const SHORTCUT_LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
+
+export function Footer({ onReset }: { onReset: () => void }) {
+  return (
+    <div className={styles.foot}>
+      <p className={styles.hint}>
+        Clavier : {SHORTCUT_LETTERS.map((l) => <kbd key={l} className={styles.kbd}>{l}</kbd>)} pour Do à Si
+      </p>
+      <button
+        className={styles.link}
+        type="button"
+        onClick={(e) => {
+          onReset();
+          if (e.detail > 0) e.currentTarget.blur(); // mouse click: don't keep focus, Space/Enter keep working
+        }}
+      >
+        Remettre à zéro
+      </button>
+    </div>
+  );
+}

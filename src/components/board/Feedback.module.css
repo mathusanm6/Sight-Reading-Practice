@@ -1,0 +1,6 @@
+.feedback { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 34px; padding-top: 6px; }
+.msg { font-size: 17px; font-weight: 700; }
+.muted { font-weight: 500; color: var(--muted); }
+.ok { color: var(--good); }
+.bad { color: var(--bad); }
+.last { font: 500 12px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }

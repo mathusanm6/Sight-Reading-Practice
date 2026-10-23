@@ -1,0 +1,473 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Portée Flash</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one centered column. Settings strip, then a "score sheet" card (stats + staff), then seven answer keys drawn as one octave of piano keys, Do à Si. */
+:root{
+  --bg:#ecf0f5; --surface:#fafbfd; --ink:#101a28; --muted:#586679;
+  --line:#c8d1dd; --soft:#e1e7ef; --staff:#44546a;
+  --accent:#3347d3; --on-accent:#ffffff;
+  --good:#1a8754; --bad:#c7352b; --on-state:#ffffff;
+  --key:#fbfbfc; --key-ink:#101a28; --key-edge:#b4bfcd; --black-key:#0e1621;
+  --shadow:0 1px 0 rgba(16,26,40,.04), 0 10px 28px -14px rgba(16,26,40,.22);
+  --display:"Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c121a; --surface:#141c27; --ink:#e8edf4; --muted:#93a1b3;
+    --line:#2a3646; --soft:#1d2836; --staff:#8b9bb0;
+    --accent:#93a4ff; --on-accent:#0c121a;
+    --good:#4cc38a; --bad:#ff7b70; --on-state:#0c121a;
+    --key:#e4e9f0; --key-ink:#101a28; --key-edge:#8996a8; --black-key:#05080d;
+    --shadow:0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c121a; --surface:#141c27; --ink:#e8edf4; --muted:#93a1b3;
+  --line:#2a3646; --soft:#1d2836; --staff:#8b9bb0;
+  --accent:#93a4ff; --on-accent:#0c121a;
+  --good:#4cc38a; --bad:#ff7b70; --on-state:#0c121a;
+  --key:#e4e9f0; --key-ink:#101a28; --key-edge:#8996a8; --black-key:#05080d;
+  --shadow:0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--display); font-weight:500; font-size:16px; line-height:1.4;
+  padding-block:20px 32px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  -webkit-text-size-adjust:100%;
+}
+button{font:inherit; color:inherit}
+.app{width:100%; max-width:640px; margin-inline:auto; display:grid; gap:14px}
+
+/* header */
+.eyebrow{margin:0 0 8px; font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+h1{margin:0; font-size:clamp(30px,7vw,40px); line-height:1; font-weight:700; letter-spacing:-.025em; text-wrap:balance}
+
+/* settings */
+.settings{display:grid; gap:8px}
+.opt{display:grid; grid-template-columns:7.4rem minmax(0,1fr); align-items:center; gap:10px}
+.lab{font:500 11px/1.2 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.seg{display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:2px; padding:3px; min-width:0; background:var(--soft); border-radius:11px}
+.seg label{position:relative; min-width:0}
+.seg input{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer}
+.seg span{display:grid; place-items:center; min-height:38px; padding:0 6px; border-radius:8px; font-size:14px; font-weight:500; white-space:nowrap; color:var(--muted); transition:background .12s, color .12s}
+.seg input:not(:checked):hover + span{color:var(--ink)}
+.seg input:checked + span{background:var(--accent); color:var(--on-accent); font-weight:700}
+.seg input:focus-visible + span{outline:2px solid var(--accent); outline-offset:2px}
+
+/* board */
+.board{background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:14px 14px 10px}
+.hud{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding-bottom:12px; border-bottom:1px solid var(--soft)}
+.stat{display:grid; gap:4px; min-width:0}
+.k{font:500 10.5px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.v{font-size:26px; line-height:1; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.v small{font-size:14px; font-weight:500; color:var(--muted); letter-spacing:0}
+.timer{height:4px; margin-top:12px; border-radius:2px; background:var(--soft); overflow:hidden}
+.fill{height:100%; background:var(--accent); transform-origin:left center; transition:transform .1s linear}
+.fill.low{background:var(--bad)}
+.stage{position:relative; display:grid; place-items:center; min-height:210px; margin-top:6px}
+#staff{display:block; width:100%; max-width:520px; height:auto; max-height:62vh}
+.overlay{position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:10px; padding:14px; text-align:center; background:var(--surface); border-radius:12px}
+.ov-k{margin:0; font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.ov-t{margin:0; font-size:20px; line-height:1.25; font-weight:700; text-wrap:balance}
+.ov-big{margin:0; display:flex; align-items:baseline; gap:10px}
+.ov-big b{font-size:56px; line-height:1; font-weight:700; letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.ov-big span{font-size:18px; color:var(--muted)}
+.ov-s{margin:0; font-size:14px; color:var(--muted); font-variant-numeric:tabular-nums}
+.ov-rec{margin:0; font:500 12px/1.2 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.ov-rec.new{color:var(--good)}
+.primary{appearance:none; border:0; border-radius:11px; height:46px; padding:0 26px; background:var(--accent); color:var(--on-accent); font-weight:700; font-size:16px; cursor:pointer; touch-action:manipulation}
+.primary:focus-visible, .key:focus-visible, .link:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.feedback{display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:34px; padding-top:6px}
+.msg{font-size:17px; font-weight:700}
+.msg.muted{font-weight:500; color:var(--muted)}
+.msg.ok{color:var(--good)}
+.msg.bad{color:var(--bad)}
+.last{font:500 12px/1 var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap}
+
+/* staff drawing (user units = SVG viewBox units) */
+.sl{stroke:var(--staff); stroke-width:1.9; fill:none}
+.thick{fill:var(--staff)}
+.clef path{fill:var(--ink)}
+.led{stroke:var(--staff); stroke-width:2.7}
+.note{color:var(--ink)}
+.note.ok{color:var(--good)}
+.note.bad{color:var(--bad)}
+.head{fill:currentColor}
+.stem{stroke:currentColor; stroke-width:1.9}
+.enter{animation:noteIn .14s ease-out}
+@keyframes noteIn{from{opacity:0; transform:translateX(10px)} to{opacity:1; transform:none}}
+
+/* answer keys: one octave, white keys are the buttons, black keys are decoration */
+.keys{position:relative; display:grid; grid-template-columns:repeat(7,1fr); gap:3px; transition:opacity .15s}
+.keys.off{opacity:.45; pointer-events:none}
+.key{
+  appearance:none; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+  display:flex; align-items:flex-end; justify-content:center;
+  height:clamp(104px, 22vw, 132px); padding:0 0 12px; min-width:0;
+  background:var(--key); color:var(--key-ink);
+  border:1px solid var(--key-edge); border-radius:4px 4px 12px 12px;
+  font-size:18px; font-weight:700; letter-spacing:-.01em;
+  box-shadow:inset 0 -7px 0 rgba(16,26,40,.08);
+}
+@media (hover:hover){ .key:hover{filter:brightness(.95)} }
+.key:active{transform:translateY(2px); box-shadow:inset 0 -3px 0 rgba(16,26,40,.08)}
+.key.ok{background:var(--good); border-color:var(--good); color:var(--on-state)}
+.key.bad{background:var(--bad); border-color:var(--bad); color:var(--on-state)}
+.black{
+  position:absolute; top:0; height:58%; pointer-events:none;
+  width:calc((100% - 18px) / 7 * .58);
+  left:calc(var(--pos) * (100% - 18px) / 7 + (var(--pos) - .5) * 3px);
+  transform:translateX(-50%);
+  background:var(--black-key); border-radius:0 0 6px 6px;
+}
+
+.foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
+.hint{margin:0; font-size:13px; color:var(--muted)}
+kbd{display:inline-block; margin-right:3px; padding:1px 5px; border:1px solid var(--line); border-radius:4px; background:var(--surface); color:var(--ink); font:500 11.5px/1.4 var(--mono)}
+.link{appearance:none; border:0; background:none; padding:6px 2px; min-height:32px; font-size:13px; color:var(--muted); text-decoration:underline; text-underline-offset:3px; cursor:pointer; margin-left:auto}
+.link:hover{color:var(--ink)}
+@media (hover:none){ .hint{display:none} }
+
+@media (max-width:420px){
+  .opt{grid-template-columns:6.4rem minmax(0,1fr); gap:8px}
+  .seg span{font-size:13px; padding:0 3px}
+  .key{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  .enter{animation:none}
+  .fill, .keys, .seg span{transition:none}
+}
+</style>
+
+<main class="app">
+  <header>
+    <p class="eyebrow">Solfège · lecture de notes</p>
+    <h1>Portée Flash</h1>
+  </header>
+
+  <form class="settings" aria-label="Réglages" onsubmit="return false">
+    <div class="opt" role="radiogroup" aria-labelledby="l-clef">
+      <span class="lab" id="l-clef">Clé</span>
+      <div class="seg">
+        <label><input type="radio" name="clef" value="both" checked><span>Sol + Fa</span></label>
+        <label><input type="radio" name="clef" value="sol"><span>Sol</span></label>
+        <label><input type="radio" name="clef" value="fa"><span>Fa</span></label>
+      </div>
+    </div>
+    <div class="opt" role="radiogroup" aria-labelledby="l-led">
+      <span class="lab" id="l-led">Lignes suppl.</span>
+      <div class="seg">
+        <label><input type="radio" name="ledger" value="0"><span>Aucune</span></label>
+        <label><input type="radio" name="ledger" value="2" checked><span>Jusqu’à 2</span></label>
+        <label><input type="radio" name="ledger" value="4"><span>Jusqu’à 4</span></label>
+      </div>
+    </div>
+    <div class="opt" role="radiogroup" aria-labelledby="l-mode">
+      <span class="lab" id="l-mode">Mode</span>
+      <div class="seg">
+        <label><input type="radio" name="mode" value="free" checked><span>Libre</span></label>
+        <label><input type="radio" name="mode" value="timed"><span>Chrono 60 s</span></label>
+      </div>
+    </div>
+  </form>
+
+  <section class="board" aria-label="Exercice">
+    <div class="hud">
+      <div class="stat"><span class="k">Justes</span><span class="v" id="sCorrect">0<small>/0</small></span></div>
+      <div class="stat"><span class="k">Série</span><span class="v" id="sStreak">0</span></div>
+      <div class="stat"><span class="k" id="kThird">Moyenne</span><span class="v" id="sThird">–</span></div>
+    </div>
+    <div class="timer" id="timer" hidden><div class="fill" id="timerFill"></div></div>
+    <div class="stage">
+      <svg id="staff" viewBox="0 0 304 160" role="img" aria-label="Portée avec une note à nommer"></svg>
+      <div class="overlay" id="overlay" hidden></div>
+    </div>
+    <div class="feedback" aria-live="polite">
+      <span class="msg muted" id="msg">Quelle est cette note ?</span>
+      <span class="last" id="last"></span>
+    </div>
+  </section>
+
+  <section class="keys" id="keys" aria-label="Nom de la note">
+    <button class="key" type="button" data-i="0">Do</button>
+    <button class="key" type="button" data-i="1">Ré</button>
+    <button class="key" type="button" data-i="2">Mi</button>
+    <button class="key" type="button" data-i="3">Fa</button>
+    <button class="key" type="button" data-i="4">Sol</button>
+    <button class="key" type="button" data-i="5">La</button>
+    <button class="key" type="button" data-i="6">Si</button>
+    <i class="black" style="--pos:1"></i>
+    <i class="black" style="--pos:2"></i>
+    <i class="black" style="--pos:4"></i>
+    <i class="black" style="--pos:5"></i>
+    <i class="black" style="--pos:6"></i>
+  </section>
+
+  <div class="foot">
+    <p class="hint">Clavier : <kbd>C</kbd><kbd>D</kbd><kbd>E</kbd><kbd>F</kbd><kbd>G</kbd><kbd>A</kbd><kbd>B</kbd> pour Do à Si</p>
+    <button class="link" type="button" id="reset">Remettre à zéro</button>
+  </div>
+</main>
+
+<script>
+const NAMES = ['Do', 'Ré', 'Mi', 'Fa', 'Sol', 'La', 'Si'];
+const L = 16;                 // one staff space, in viewBox units
+const W = 19 * L;
+const SESSION_MS = 60000;
+// base = diatonic index (octave*7 + C=0..B=6) of the bottom line; origin = step of the line the clef is drawn on
+const CLEFS = {
+  sol: { base: 30, origin: 2, d: 'M1.85 0.9Q2.03 1.52 2.03 1.92Q2.03 2.23 1.81 2.43Q1.59 2.63 1.28 2.63Q0.98 2.63 0.77 2.46Q0.55 2.28 0.55 2.03Q0.55 1.86 0.67 1.7Q0.79 1.55 0.96 1.55Q1.14 1.55 1.25 1.67Q1.36 1.8 1.36 1.96Q1.36 2.33 0.94 2.33Q1.05 2.49 1.28 2.49Q1.37 2.49 1.46 2.47Q1.56 2.44 1.66 2.38Q1.76 2.31 1.82 2.17Q1.88 2.03 1.88 1.84Q1.88 1.72 1.72 0.95Q1.59 0.99 1.39 0.99Q0.82 0.99 0.41 0.56Q0 0.14 0 -0.45Q0 -0.66 0.07 -0.87Q0.14 -1.08 0.22 -1.25Q0.31 -1.41 0.47 -1.61Q0.64 -1.81 0.76 -1.94Q0.87 -2.06 1.08 -2.26Q0.94 -2.75 0.94 -3.15Q0.94 -3.68 1.14 -4.03Q1.33 -4.39 1.53 -4.39Q1.59 -4.39 1.66 -4.31Q1.73 -4.24 1.8 -4.1Q1.87 -3.97 1.92 -3.74Q1.97 -3.52 1.97 -3.27Q1.97 -2.33 1.31 -1.72L1.46 -1.02Q1.56 -1.04 1.63 -1.04Q1.99 -1.04 2.24 -0.75Q2.49 -0.46 2.49 -0.04Q2.49 0.66 1.85 0.9ZM1.8 -3.48Q1.8 -3.81 1.62 -3.81Q1.4 -3.81 1.26 -3.49Q1.11 -3.18 1.11 -2.8Q1.11 -2.55 1.18 -2.37Q1.41 -2.5 1.61 -2.85Q1.8 -3.21 1.8 -3.48ZM2.23 0.16Q2.23 -0.16 2.04 -0.36Q1.85 -0.55 1.55 -0.55L1.82 0.78Q2.23 0.61 2.23 0.16ZM1.69 0.81 1.42 -0.54Q1.26 -0.51 1.13 -0.35Q1 -0.19 1 -0.02Q1 0.07 1.03 0.16Q1.07 0.24 1.12 0.3Q1.17 0.36 1.22 0.41Q1.27 0.46 1.31 0.48Q1.34 0.5 1.34 0.5L1.3 0.53Q1.1 0.47 0.93 0.29Q0.75 0.11 0.75 -0.17Q0.75 -0.45 0.93 -0.68Q1.1 -0.91 1.31 -0.99L1.21 -1.62Q0.28 -0.85 0.28 -0.13Q0.28 0.3 0.61 0.59Q0.93 0.88 1.34 0.88Q1.44 0.88 1.69 0.81Z' },   // bottom line = Mi (E4), clef curls around the Sol line
+  fa:  { base: 18, origin: 6, d: 'M2.94 -0.73Q3.05 -0.73 3.12 -0.65Q3.2 -0.58 3.2 -0.47Q3.2 -0.37 3.11 -0.29Q3.03 -0.22 2.93 -0.22Q2.68 -0.22 2.68 -0.49Q2.68 -0.59 2.76 -0.66Q2.84 -0.73 2.94 -0.73ZM3.2 0.68Q3.2 0.79 3.12 0.87Q3.04 0.95 2.94 0.95Q2.68 0.95 2.68 0.68Q2.68 0.58 2.75 0.51Q2.83 0.43 2.94 0.43Q3.05 0.43 3.12 0.51Q3.2 0.6 3.2 0.68ZM1.26 -1.05Q1.75 -1.05 2.08 -0.72Q2.41 -0.38 2.41 0.08Q2.41 0.31 2.35 0.52Q2.28 0.74 2.14 0.94Q2.01 1.13 1.87 1.29Q1.73 1.45 1.51 1.62Q1.29 1.78 1.14 1.89Q0.99 2 0.73 2.14Q0.47 2.28 0.36 2.33Q0.25 2.39 0.03 2.5L0 2.4Q0.01 2.4 0.16 2.3Q0.32 2.19 0.41 2.13Q0.51 2.07 0.7 1.92Q0.89 1.77 1.02 1.64Q1.14 1.51 1.3 1.31Q1.46 1.12 1.56 0.93Q1.65 0.75 1.72 0.51Q1.79 0.27 1.79 0.03Q1.79 -0.92 1.12 -0.92Q0.9 -0.92 0.74 -0.86Q0.59 -0.8 0.52 -0.72Q0.45 -0.64 0.42 -0.57Q0.39 -0.51 0.39 -0.46Q0.39 -0.37 0.51 -0.37Q0.56 -0.37 0.62 -0.39Q0.69 -0.41 0.71 -0.41Q0.88 -0.41 0.99 -0.31Q1.09 -0.21 1.09 -0.06Q1.09 0.12 0.96 0.23Q0.83 0.34 0.65 0.34Q0.41 0.34 0.26 0.21Q0.11 0.07 0.11 -0.15Q0.11 -0.55 0.45 -0.8Q0.79 -1.05 1.26 -1.05Z' }    // bottom line = Sol (G2), clef sits on the Fa line
+};
+const KEYMAP = { c: 0, d: 1, e: 2, f: 3, g: 4, a: 5, b: 6 };
+
+const $ = (s) => document.querySelector(s);
+const el = {
+  staff: $('#staff'), overlay: $('#overlay'), timer: $('#timer'), fill: $('#timerFill'),
+  msg: $('#msg'), last: $('#last'), kThird: $('#kThird'), sThird: $('#sThird'),
+  sCorrect: $('#sCorrect'), sStreak: $('#sStreak'), keysWrap: $('#keys'),
+  keys: Array.from(document.querySelectorAll('.key'))
+};
+
+const state = {
+  clefMode: 'both', ledger: 2, mode: 'free', phase: 'playing',
+  cur: null, locked: false, shownAt: 0,
+  correct: 0, total: 0, streak: 0, times: [], last: null,
+  endAt: 0, tickId: 0, nextId: 0
+};
+
+/* ---------- music logic ---------- */
+function nameIndex(n) { return (((CLEFS[n.clef].base + n.s) % 7) + 7) % 7; }
+function isMiddleC(n) { return (n.clef === 'sol' && n.s === -2) || (n.clef === 'fa' && n.s === 10); }
+function rand(n) { return Math.floor(Math.random() * n); }
+
+function pickNote() {
+  const n = state.ledger, minS = -(2 * n + 1), maxS = 8 + 2 * n + 1;
+  const outside = [];
+  for (let i = minS; i <= maxS; i++) if (i <= -2 || i >= 10) outside.push(i);
+  let pick, tries = 0;
+  do {
+    const clef = state.clefMode === 'both' ? (Math.random() < 0.5 ? 'sol' : 'fa') : state.clefMode;
+    const s = (n > 0 && Math.random() < 0.5) ? outside[rand(outside.length)] : minS + rand(maxS - minS + 1);
+    pick = { clef, s };
+    tries++;
+  } while (state.cur && pick.clef === state.cur.clef && pick.s === state.cur.s && tries < 20);
+  return pick;
+}
+
+/* ---------- drawing ---------- */
+function renderStaff(note) {
+  const n = state.ledger, minS = -(2 * n + 1), maxS = 8 + 2 * n + 1, pad = 1.3;
+  const H = Math.round((pad * 2 + (maxS - minS) / 2) * L);
+  const yBase = (pad + maxS / 2) * L;
+  const y = (st) => +(yBase - st * L / 2).toFixed(2);
+  const clef = CLEFS[note ? note.clef : 'sol'];
+  const x0 = 0.5 * L, x1 = 18.5 * L;
+
+  let out = '';
+  for (const k of [0, 2, 4, 6, 8]) out += `<line class="sl" x1="${x0}" x2="${x1}" y1="${y(k)}" y2="${y(k)}"/>`;
+  out += `<line class="sl" x1="${x0}" x2="${x0}" y1="${y(8)}" y2="${y(0)}"/>`;
+  out += `<line class="sl" x1="${17.5 * L}" x2="${17.5 * L}" y1="${y(8)}" y2="${y(0)}"/>`;
+  out += `<rect class="thick" x="${17.9 * L}" y="${y(8)}" width="${0.6 * L}" height="${4 * L}"/>`;
+  out += `<g class="clef" transform="translate(${1.0 * L} ${y(clef.origin)}) scale(${L})"><path d="${clef.d}"/></g>`;
+
+  if (note) {
+    const nx = 11 * L, s = note.s, ny = y(s);
+    let led = '';
+    const ledger = (yy) => `<line class="led" x1="${nx - 1.25 * L}" x2="${nx + 1.25 * L}" y1="${yy}" y2="${yy}"/>`;
+    if (s <= -2) for (let k = -2; k >= s; k -= 2) led += ledger(y(k));
+    if (s >= 10) for (let k = 10; k <= s; k += 2) led += ledger(y(k));
+    const up = s < 4;
+    const len = Math.max(3.5, Math.abs(4 - s) / 2) * L;
+    const sx = nx + (up ? 0.53 : -0.53) * L;
+    const sy1 = ny + (up ? -0.1 : 0.1) * L, sy2 = up ? ny - len : ny + len;
+    out += `<g class="enter">${led}<g class="note" id="note">` +
+           `<line class="stem" x1="${sx}" x2="${sx}" y1="${sy1}" y2="${sy2}"/>` +
+           `<ellipse class="head" rx="${0.65 * L}" ry="${0.43 * L}" transform="translate(${nx} ${ny}) rotate(-24)"/>` +
+           `</g></g>`;
+  }
+  el.staff.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  el.staff.innerHTML = out;
+}
+
+/* ---------- feedback ---------- */
+function fmt(ms) { return (ms / 1000).toFixed(1).replace('.', ',') + ' s'; }
+function avg() { return state.times.length ? state.times.reduce((a, b) => a + b, 0) / state.times.length : null; }
+
+function updateHud() {
+  el.sCorrect.innerHTML = `${state.correct}<small>/${state.total}</small>`;
+  el.sStreak.textContent = state.streak;
+  if (state.mode === 'free') {
+    const a = avg();
+    el.sThird.textContent = a === null ? '–' : fmt(a);
+  }
+}
+function setPrompt() { el.msg.className = 'msg muted'; el.msg.textContent = 'Quelle est cette note ?'; }
+function clearPrompt() { el.msg.className = 'msg muted'; el.msg.textContent = ''; }
+function clearKeys() { el.keys.forEach(k => k.classList.remove('ok', 'bad')); }
+function syncKeys() { el.keysWrap.classList.toggle('off', state.phase !== 'playing'); }
+
+/* ---------- play loop ---------- */
+function showNote() {
+  clearTimeout(state.nextId);
+  state.cur = pickNote();
+  state.locked = false;
+  state.shownAt = performance.now();
+  renderStaff(state.cur);
+  clearKeys();
+  setPrompt();
+}
+
+function answer(i) {
+  if (state.phase !== 'playing' || state.locked || !state.cur) return;
+  const rt = performance.now() - state.shownAt;
+  const good = nameIndex(state.cur);
+  const right = good === i;
+  state.locked = true;
+  state.total++;
+  if (right) { state.correct++; state.streak++; state.times.push(rt); state.last = rt; el.last.textContent = 'Dernière ' + fmt(rt); }
+  else { state.streak = 0; }
+
+  const noteEl = $('#note');
+  if (noteEl) noteEl.classList.add(right ? 'ok' : 'bad');
+  el.keys.forEach((k, j) => { k.classList.toggle('ok', j === good); k.classList.toggle('bad', !right && j === i); });
+  const nm = NAMES[good] + (isMiddleC(state.cur) ? ' (do central)' : '');
+  el.msg.className = 'msg ' + (right ? 'ok' : 'bad');
+  el.msg.textContent = right ? `Juste · ${nm}` : `Non · c’était ${nm}`;
+  updateHud();
+
+  const delay = right ? 220 : (state.mode === 'timed' ? 800 : 1300);
+  state.nextId = setTimeout(showNote, delay);
+}
+
+function skip() { if (state.phase === 'playing' && state.locked) showNote(); }
+
+/* ---------- timed mode ---------- */
+function idleHtml() {
+  return `<p class="ov-k">Mode chrono</p>
+    <p class="ov-t">60 secondes.<br>Nomme un maximum de notes.</p>
+    <button class="primary" type="button" data-act="start">Démarrer</button>`;
+}
+function showOverlay(html, focus) {
+  el.overlay.innerHTML = html;
+  el.overlay.hidden = false;
+  if (focus) { const b = el.overlay.querySelector('button'); if (b) b.focus({ preventScroll: true }); }
+}
+function clearTimers() { clearInterval(state.tickId); clearTimeout(state.nextId); }
+function zeroStats() { Object.assign(state, { correct: 0, total: 0, streak: 0, times: [], last: null, cur: null, locked: false }); el.last.textContent = ''; }
+
+function tick() {
+  const left = Math.max(0, state.endAt - performance.now());
+  el.fill.style.transform = `scaleX(${(left / SESSION_MS).toFixed(4)})`;
+  el.fill.classList.toggle('low', left <= 10000);
+  el.sThird.textContent = Math.ceil(left / 1000) + ' s';
+  if (left <= 0) finish();
+}
+
+function startTimed() {
+  clearTimers(); zeroStats();
+  state.phase = 'playing';
+  el.overlay.hidden = true;
+  state.endAt = performance.now() + SESSION_MS;
+  state.tickId = setInterval(tick, 100);
+  showNote(); updateHud(); syncKeys(); tick();
+}
+
+function finish() {
+  if (state.phase !== 'playing') return;
+  clearTimers();
+  state.phase = 'finished'; state.locked = true;
+  el.sThird.textContent = '0 s';
+  syncKeys(); clearPrompt(); el.last.textContent = '';
+
+  const key = `portee-flash:best:${state.clefMode}:${state.ledger}`;
+  let prev = null;
+  try { const v = localStorage.getItem(key); prev = v === null ? 0 : (Number(v) || 0); } catch (e) { prev = null; }
+  const record = prev !== null && state.correct > prev;
+  if (record) { try { localStorage.setItem(key, String(state.correct)); } catch (e) {} }
+
+  const pct = state.total ? Math.round(100 * state.correct / state.total) + ' %' : '–';
+  const a = avg();
+  let rec = '';
+  if (record) rec = '<p class="ov-rec new">Nouveau record</p>';
+  else if (prev) rec = `<p class="ov-rec">Record : ${prev} pour ces réglages</p>`;
+  showOverlay(`<p class="ov-k">Temps écoulé</p>
+    <p class="ov-big"><b>${state.correct}</b><span>notes justes</span></p>
+    <p class="ov-s">sur ${state.total} · ${pct}${a === null ? '' : ' · ' + fmt(a) + ' par note'}</p>
+    ${rec}
+    <button class="primary" type="button" data-act="start">Rejouer</button>`, true);
+}
+
+/* ---------- session + settings ---------- */
+function resetSession() {
+  clearTimers(); zeroStats();
+  el.timer.hidden = state.mode !== 'timed';
+  el.fill.style.transform = 'scaleX(1)'; el.fill.classList.remove('low');
+  if (state.mode === 'timed') {
+    state.phase = 'idle';
+    renderStaff(null); clearPrompt(); clearKeys();
+    showOverlay(idleHtml(), false);
+    el.kThird.textContent = 'Temps'; el.sThird.textContent = '60 s';
+  } else {
+    state.phase = 'playing';
+    el.overlay.hidden = true;
+    el.kThird.textContent = 'Moyenne';
+    showNote();
+  }
+  updateHud(); syncKeys();
+}
+function readSettings() {
+  state.clefMode = $('input[name="clef"]:checked').value;
+  state.ledger = Number($('input[name="ledger"]:checked').value);
+  state.mode = $('input[name="mode"]:checked').value;
+}
+function setRadio(name, val) { const r = $(`input[name="${name}"][value="${val}"]`); if (r) r.checked = true; }
+function loadPrefs() {
+  try {
+    const p = JSON.parse(localStorage.getItem('portee-flash:prefs') || 'null');
+    if (p) { setRadio('clef', p.clefMode); setRadio('ledger', p.ledger); setRadio('mode', p.mode); }
+  } catch (e) {}
+}
+function savePrefs() {
+  try { localStorage.setItem('portee-flash:prefs', JSON.stringify({ clefMode: state.clefMode, ledger: state.ledger, mode: state.mode })); } catch (e) {}
+}
+
+/* ---------- events ---------- */
+$('.settings').addEventListener('change', () => { readSettings(); savePrefs(); resetSession(); });
+el.keys.forEach((k, i) => k.addEventListener('click', (e) => { if (e.detail > 0) k.blur(); answer(i); }));
+el.overlay.addEventListener('click', (e) => { if (e.target.closest('[data-act="start"]')) startTimed(); });
+$('#reset').addEventListener('click', (e) => { resetSession(); if (e.detail > 0) e.currentTarget.blur(); });
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+  const digit = /^(Digit|Numpad)([1-7])$/.exec(e.code);           // physical keys, so AZERTY works without Shift
+  const letter = e.key && e.key.length === 1 ? e.key.toLowerCase() : '';
+  let idx = -1;
+  if (digit) idx = Number(digit[2]) - 1;
+  else if (Object.hasOwn(KEYMAP, letter)) idx = KEYMAP[letter];
+  if (idx >= 0) { e.preventDefault(); answer(idx); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.tagName !== 'BUTTON') {
+    if (state.phase === 'idle' || state.phase === 'finished') { e.preventDefault(); startTimed(); }
+    else if (state.locked) { e.preventDefault(); skip(); }
+  }
+});
+
+loadPrefs();
+readSettings();
+resetSession();
+</script>
+
+</body></html>

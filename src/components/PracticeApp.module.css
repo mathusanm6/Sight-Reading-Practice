@@ -1,0 +1,10 @@
+/* The exercise fills the viewport height; the board absorbs whatever space is left. */
+.shell { display: flex; height: 100dvh; }
+.main {
+  flex: 1; min-width: 0; overflow-y: auto; /* only scrolls on very short screens */
+  padding-block: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.app { width: 100%; max-width: 640px; min-height: 100%; margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
+.app > section:first-of-type { flex: 1; }
